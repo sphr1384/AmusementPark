@@ -52,7 +52,7 @@ public class ShowCard extends JPanel implements MouseListener {
         createDialog();
         setupButtons();
 
-        addMouseListener(this);
+        this.addMouseListener(this);
     }
 
     private void setIcones(){
@@ -106,26 +106,64 @@ public class ShowCard extends JPanel implements MouseListener {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (index == 2) {
-                    decisionDialog.dispose();
-                }
-
-                else if (index == 0){
+                int condition;
+                // buy button
+                if (index == 0){
                     if (card.getCard().getCount() > 0){
                         card.updateCard(card.getCard().getCount() - 1);
-                        turnChangeListener.onWalletUpdate_coin(card);
-                        turnChangeListener.onWalletUpdate_specialCoin(card);
-                        turnChangeListener.onWalletUpdate_card(card);
-                        turnChangeListener.onScore(card);
-                        turnChangeListener.onTurnChange();
+                        condition = turnChangeListener.onWalletUpdate_coin(card);
+
+                        if (condition != -1){
+                            turnChangeListener.onWalletUpdate_specialCoin(card);
+                            turnChangeListener.onWalletUpdate_card(card);
+                            turnChangeListener.onScore(card);
+                            turnChangeListener.onTurnChange();
                         
-                        decisionDialog.dispose();
+                            decisionDialog.dispose();
+                        }
                     }   
+                }
+
+                    // reserve button
+                    else if (index == 1){
+                        if (card.getCard().getCount() > 0){
+                            if (isDisposingValid()){
+                                card.updateCard(card.getCard().getCount() - 1);
+                                turnChangeListener.onReservationUpdate(card);
+                                turnChangeListener.onTurnChange();
+    
+                                decisionDialog.dispose();
+                            }
+                            
+                        }
+                    }
+
+                    // exit button
+                    else if (index == 2) {
+                        decisionDialog.dispose();
+                    }
                     
                 }
-            }
+            
         });
         return button;
+    }
+
+    private boolean isDisposingValid(){
+        if (Player.turn == 1){
+            if (player1.playerReservedCard.totalReserved < 3){
+                return true;
+            }
+            else return false;
+        }
+        else if (Player.turn == 2){
+            if (player2.playerReservedCard.totalReserved < 3){
+                return true;
+            }
+            else return false;
+        }
+
+        else return false;
     }
 
     // Setup button listeners
@@ -151,3 +189,4 @@ public class ShowCard extends JPanel implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {}
 }
+

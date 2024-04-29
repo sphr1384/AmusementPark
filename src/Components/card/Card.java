@@ -3,6 +3,7 @@ package Components.card;
 import Components.Coin;
 import constants.CoinColor;
 import constants.Game;
+import player.Player;
 
 public class Card {
     // non graphical attributes
@@ -75,7 +76,7 @@ public class Card {
                 this.score = 5;
                 break;
             case SPRING_SWING:
-                this.cardCode = "P3-O3-R0-B0-G0/O2";
+                this.cardCode = "P3-O3-R0-B0-G0/O1";
                 this.score = 4;
                 break;
         }
@@ -193,6 +194,68 @@ public class Card {
 
     public int getCount() {
         return count;
+    }
+
+    public int canBuy(Player player){
+        char target;
+        int count;
+        int netPrice;
+        int shortFall = 0;
+
+
+        for (int i = 0; i < 14; i++){
+            if (i % 3 == 0){
+                target = cardCode.charAt(i);
+                count = Character.getNumericValue(cardCode.charAt(i + 1));
+
+                switch (target) {
+                    case 'P':
+                        netPrice = count - player.stuff.getInfo().specialPinkCoin;
+                        if (player.stuff.getInfo().pinkCoin < netPrice){
+                            shortFall += (netPrice - player.stuff.getInfo().pinkCoin);
+                        }
+                        break;
+
+                    case 'O':
+                        netPrice = count - player.stuff.getInfo().specialOrangeCoin;
+                        if (player.stuff.getInfo().orangeCoin < netPrice){
+                            shortFall += (netPrice - player.stuff.getInfo().orangeCoin);
+                        }
+                        break;
+
+                    case 'R':
+                        netPrice = count - player.stuff.getInfo().specialRedCoin;
+                        if (player.stuff.getInfo().redCoin < netPrice){
+                            shortFall += (netPrice - player.stuff.getInfo().redCoin);
+                        }
+                        break;
+
+                    case 'B':
+                        netPrice = count - player.stuff.getInfo().specialBlueCoin;
+                        if (player.stuff.getInfo().blueCoin < netPrice){
+                            shortFall += (netPrice - player.stuff.getInfo().blueCoin);
+                        }
+                        break;
+
+                    case 'G':
+                        netPrice = count - player.stuff.getInfo().specialGreenCoin;
+                        if (player.stuff.getInfo().greenCoin < netPrice){
+                            shortFall += (netPrice - player.stuff.getInfo().greenCoin);
+                        }
+                        break;
+                }
+
+                
+            }
+        }
+
+        if (shortFall <= 0) return 0; // no need for golden coin
+
+        else {
+            if (shortFall <= player.stuff.getInfo().goldenCoin) return shortFall; // need for golden coin (amount = shortfall)
+            else return -1; // cannot buy
+        }
+
     }
     
 }

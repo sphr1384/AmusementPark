@@ -9,6 +9,7 @@ public class Player {
     public int score;
     private PlayerCard playerCard;
     private PlayerCoin playerCoin;
+    public  PlayerReservedCard playerReservedCard;
 
     public static void changeTurn(){
         if (turn == 1){
@@ -23,6 +24,7 @@ public class Player {
         stuff = new StoredStuff(playerName, avatar);
         playerCard = new PlayerCard();
         playerCoin = new PlayerCoin(stuff);
+        playerReservedCard = new PlayerReservedCard();
     }
 
     public PlayerCoin getPlayerCoin() {

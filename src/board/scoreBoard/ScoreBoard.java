@@ -21,6 +21,8 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
     private PlayersPanel player2Panel;
     private Wallet player1Wallet;
     private Wallet player2Wallet;
+    private Reserved reserved1;
+    private Reserved reserved2;
     private TurnPanel turn;
     private EntranceLogo logo;
 
@@ -49,92 +51,112 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         }
     }
 
-    @Override
-    public void onWalletUpdate_coin(CardUI card){
+    private void withdrawCash(Player player, CardUI card){
         String cardCode = card.getCard().getCardCode();
         int count;
         int price;
 
-        if (Player.turn == 1){
-            for (int i = 0; i < 14; i++){
-                if (i % 3 == 0){
-                    count = Character.getNumericValue(cardCode.charAt(i + 1));
+        for (int i = 0; i < 14; i++){
+            if (i % 3 == 0){
+                count = Character.getNumericValue(cardCode.charAt(i + 1));
 
-                    switch (cardCode.charAt(i)) {
-                        case 'P':
-                            price = ScoreBoard.calculatePrice(count - player1.stuff.getInfo().specialPinkCoin);
-                            player1.stuff.getInfo().pinkCoin -= price;
-                            player1.getPlayerCoin().getCoins()[0].updateCoin(player1.stuff.getInfo().pinkCoin);
-                            break;
+                switch (cardCode.charAt(i)) {
+                    case 'P':
+                        price = ScoreBoard.calculatePrice(count - player.stuff.getInfo().specialPinkCoin);
+                        player.stuff.getInfo().pinkCoin -= price;
 
-                        case 'O':
-                            price = ScoreBoard.calculatePrice(count - player1.stuff.getInfo().specialOrangeCoin);
-                            player1.stuff.getInfo().orangeCoin -= price;
-                            player1.getPlayerCoin().getCoins()[1].updateCoin(player1.stuff.getInfo().orangeCoin);
-                            break;
+                        if (player.stuff.getInfo().pinkCoin < 0){
+                            player.stuff.getInfo().pinkCoin = 0;
+                        }
 
-                        case 'R':
-                            price = ScoreBoard.calculatePrice(count - player1.stuff.getInfo().specialRedCoin);
-                            player1.stuff.getInfo().redCoin -= price;
-                            player1.getPlayerCoin().getCoins()[2].updateCoin(player1.stuff.getInfo().redCoin);
-                            break;
+                        player.getPlayerCoin().getCoins()[0].updateCoin(player.stuff.getInfo().pinkCoin);
+                        break;
 
-                        case 'B':
-                            price = ScoreBoard.calculatePrice(count - player1.stuff.getInfo().specialBlueCoin);
-                            player1.stuff.getInfo().blueCoin -= price;
-                            player1.getPlayerCoin().getCoins()[3].updateCoin(player1.stuff.getInfo().blueCoin);
-                            break;
-                            
-                        case 'G':
-                            price = ScoreBoard.calculatePrice(count - player1.stuff.getInfo().specialGreenCoin);
-                            player1.stuff.getInfo().greenCoin -= price;
-                            player1.getPlayerCoin().getCoins()[4].updateCoin(player1.stuff.getInfo().greenCoin);
-                            break;
-                    }
-                }
-                
-                
+                    case 'O':
+                        price = ScoreBoard.calculatePrice(count - player.stuff.getInfo().specialOrangeCoin);
+                        player.stuff.getInfo().orangeCoin -= price;
+
+                        if (player.stuff.getInfo().orangeCoin < 0){
+                            player.stuff.getInfo().orangeCoin = 0;
+                        }
+
+                        player.getPlayerCoin().getCoins()[1].updateCoin(player.stuff.getInfo().orangeCoin);
+                        break;
+
+                    case 'R':
+                        price = ScoreBoard.calculatePrice(count - player.stuff.getInfo().specialRedCoin);
+                        player.stuff.getInfo().redCoin -= price;
+
+                        if (player.stuff.getInfo().redCoin < 0){
+                            player.stuff.getInfo().redCoin = 0;
+                        }
+
+                        player.getPlayerCoin().getCoins()[2].updateCoin(player.stuff.getInfo().redCoin);
+                        break;
+
+                    case 'B':
+                        price = ScoreBoard.calculatePrice(count - player.stuff.getInfo().specialBlueCoin);
+                        player.stuff.getInfo().blueCoin -= price;
+
+                        if (player.stuff.getInfo().blueCoin < 0){
+                            player.stuff.getInfo().blueCoin = 0;
+                        }
+
+                        player.getPlayerCoin().getCoins()[3].updateCoin(player.stuff.getInfo().blueCoin);
+                        break;
+                        
+                    case 'G':
+                        price = ScoreBoard.calculatePrice(count - player.stuff.getInfo().specialGreenCoin);
+                        player.stuff.getInfo().greenCoin -= price;
+
+                        if (player.stuff.getInfo().greenCoin < 0){
+                            player.stuff.getInfo().greenCoin = 0;
+                        }
+
+                        player.getPlayerCoin().getCoins()[4].updateCoin(player.stuff.getInfo().greenCoin);
+                        break;
+                } 
+            } 
+        } 
+    }
+
+    @Override
+    public int onWalletUpdate_coin(CardUI card){
+        // player 1
+        if (Player.turn == 1){ 
+            // can buy without golden coin
+            if (card.getCard().canBuy(player1) == 0){
+                withdrawCash(player1, card);
+                return 0;
             }
 
+            // can buy with golden coin
+            else if (card.getCard().canBuy(player1) > 0){
+                player1.stuff.getInfo().goldenCoin -= card.getCard().canBuy(player1);
+                player1.getPlayerCoin().getCoins()[5].updateCoin(player1.stuff.getInfo().goldenCoin);
+                withdrawCash(player1, card);
+                return 1;
+            }
+
+            else return -1;
         }
+
+        // player 2
         else {
-
-            for (int i = 0; i < 14; i++){
-                if (i % 3 == 0){
-                    count = Character.getNumericValue(cardCode.charAt(i + 1));
-
-                    switch (cardCode.charAt(i)) {
-                        case 'P':
-                            price = ScoreBoard.calculatePrice(count - player2.stuff.getInfo().specialPinkCoin);
-                            player2.stuff.getInfo().pinkCoin -= price;
-                            player2.getPlayerCoin().getCoins()[0].updateCoin(player2.stuff.getInfo().pinkCoin);
-                            break;
-                        case 'O':
-                            price = ScoreBoard.calculatePrice(count - player2.stuff.getInfo().specialOrangeCoin);
-                            player2.stuff.getInfo().orangeCoin -= price;
-                            player2.getPlayerCoin().getCoins()[1].updateCoin(player2.stuff.getInfo().orangeCoin);
-                            break;
-                        case 'R':
-                            price = ScoreBoard.calculatePrice(count - player2.stuff.getInfo().specialRedCoin);
-                            player2.stuff.getInfo().redCoin -= price;
-                            player2.getPlayerCoin().getCoins()[2].updateCoin(player2.stuff.getInfo().redCoin);
-                            break;
-                        case 'B':
-                            price = ScoreBoard.calculatePrice(count - player2.stuff.getInfo().specialBlueCoin);
-                            player2.stuff.getInfo().blueCoin -= price;
-                            player2.getPlayerCoin().getCoins()[3].updateCoin(player2.stuff.getInfo().blueCoin);
-                            break;
-                        case 'G':
-                            price = ScoreBoard.calculatePrice(count - player2.stuff.getInfo().specialGreenCoin);
-                            player2.stuff.getInfo().greenCoin -= price;
-                            player2.getPlayerCoin().getCoins()[4].updateCoin(player2.stuff.getInfo().greenCoin);
-                            break;
-                    }
-                }
-                
-                
+            // can buy without golden coin
+            if (card.getCard().canBuy(player2) == 0){
+                withdrawCash(player2, card);
+                return 0;
             }
 
+            // can buy with golden coin
+            else if (card.getCard().canBuy(player2) > 0){
+                player2.stuff.getInfo().goldenCoin -= card.getCard().canBuy(player2);
+                player2.getPlayerCoin().getCoins()[5].updateCoin(player2.stuff.getInfo().goldenCoin);
+                withdrawCash(player2, card);
+                return 1;
+            }
+            else return -1;
         }
     }
 
@@ -214,6 +236,20 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         }
     }
 
+    @Override
+    public void onReservationUpdate(CardUI card){
+        if (Player.turn == 1){
+            if (player1.playerReservedCard.totalReserved < 3){
+                player1.playerReservedCard.addToReserved(card);
+            }
+        }
+        else {
+            if (player1.playerReservedCard.totalReserved < 3){
+                player2.playerReservedCard.addToReserved(card);
+            } 
+        }
+    }
+
 
     public TurnPanel getTurn() {
         return turn;
@@ -233,7 +269,7 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         this.player1 = player1;
         this.player2 = player2;
 
-        setLayout(new GridLayout(7, 1));
+        setLayout(new GridLayout(6, 1));
         setScoreBoard(board, player1, player2);
 
         setBackground();
@@ -250,26 +286,39 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
     private void setScoreBoard(Board board, Player player1, Player player2){
         // player 1
         JPanel panel1 = new JPanel();
+        JPanel W_R1 = new JPanel();
         panel1.setLayout(new GridLayout(2, 1));
+        W_R1.setLayout(new GridLayout(1, 2));
+
         player1Panel = new PlayersPanel(player1);
         panel1.add(player1Panel);
 
         player1Wallet = new Wallet(player1, board);
-        panel1.add(player1Wallet);
+        W_R1.add(player1Wallet);
+        reserved1 = new Reserved(player1, board);
+        W_R1.add(reserved1);
+
 
         panel1.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 4));
+        panel1.add(W_R1);
         add(panel1);
 
         // player 2
         JPanel panel2 = new JPanel();
+        JPanel W_R2 = new JPanel();
         panel2.setLayout(new GridLayout(2, 1));
+        W_R2.setLayout(new GridLayout(1, 2));
+
         player2Panel = new PlayersPanel(player2);
         panel2.add(player2Panel);
 
         player2Wallet = new Wallet(player2, board);
-        panel2.add(player2Wallet);
+        W_R2.add(player2Wallet);
+        reserved2 = new Reserved(player2, board);
+        W_R2.add(reserved2);
 
         panel2.setBorder(BorderFactory.createLineBorder(Color.MAGENTA, 4));
+        panel2.add(W_R2);
         add(panel2);
 
         // turn panel

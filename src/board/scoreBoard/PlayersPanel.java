@@ -50,7 +50,6 @@ public class PlayersPanel extends JPanel{
         this.scorePanel.remove(this.score);
         this.score.setText(Integer.toString(player.getScore()));
         scorePanel.add(this.score);
-        System.out.println("SSS");
             
         revalidate();
         repaint();
