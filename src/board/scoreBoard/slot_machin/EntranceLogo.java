@@ -5,18 +5,24 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Interface.SlotMachinChosenCoinListener;
+import board.scoreBoard.TurnPanel;
 import constants.Path;
 
 public class EntranceLogo extends JPanel implements MouseListener{
     private ImageIcon originaIcon;
     private ChooseCoin slotMachinDialog;
+    TurnPanel turnPanel;
+
+    private SlotMachinChosenCoinListener slotMachinChosenCoinListener;
     
     
-    public EntranceLogo(){
+    public EntranceLogo(SlotMachinChosenCoinListener slotMachinChosenCoinListener, TurnPanel turnPanel){
+        this.turnPanel = turnPanel;
+        this.slotMachinChosenCoinListener = slotMachinChosenCoinListener;
         creatLogo();
         addMouseListener(this);
     }
@@ -42,7 +48,7 @@ public class EntranceLogo extends JPanel implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        slotMachinDialog = new ChooseCoin();
+        slotMachinDialog = new ChooseCoin(slotMachinChosenCoinListener, turnPanel);
         slotMachinDialog.setVisible(true);
     }
 
@@ -59,4 +65,10 @@ public class EntranceLogo extends JPanel implements MouseListener{
     @Override
     public void mouseEntered(MouseEvent e) {}
 
+    public ChooseCoin getSlotMachinDialog() {
+        return slotMachinDialog;
+    }
+
 }
+
+

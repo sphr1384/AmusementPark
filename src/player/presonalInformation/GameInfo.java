@@ -20,12 +20,12 @@ public class GameInfo {
     }
 
     public void setDefaultValue() {
-        pinkCoin = 4;
-        orangeCoin = 4;
-        redCoin = 4;
-        blueCoin = 4;
-        greenCoin = 4;
-        goldenCoin = 4;
+        pinkCoin = 0;
+        orangeCoin = 0;
+        redCoin = 0;
+        blueCoin = 0;
+        greenCoin = 0;
+        goldenCoin = 0;
         
         specialPinkCoin = 0;
         specialOrangeCoin = 0;

@@ -56,7 +56,7 @@ public class Wallet extends JPanel implements MouseListener{
 
     private void setCoin(){
         for (int i = 0; i < 6; i++){
-            if (player.getPlayerCoin().getCoins()[i].getCount() > 0){
+            if (player.getPlayerCoin().getCoins()[i].getCount() >= 0){
                 coin[i] = player.getPlayerCoin().getCoins()[i];
             }
         }

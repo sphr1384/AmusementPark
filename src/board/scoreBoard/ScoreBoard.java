@@ -7,14 +7,17 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import Components.Coin;
 import Components.card.CardUI;
 import board.Board;
 import board.scoreBoard.slot_machin.EntranceLogo;
+import constants.CoinColor;
 import constants.Size;
 import player.Player;
 import Interface.ClickCardListener;
+import Interface.SlotMachinChosenCoinListener;
 
-public class ScoreBoard extends JPanel implements ClickCardListener{
+public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinChosenCoinListener{
     private ScoreBoardBackground scoreBoardBackground;
     
     private PlayersPanel player1Panel;
@@ -25,6 +28,7 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
     private Reserved reserved2;
     private TurnPanel turn;
     private EntranceLogo logo;
+
 
     Player player1;
     Player player2;
@@ -250,6 +254,73 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         }
     }
 
+    private void addCoinsToPlayer(Player player, String[] selectedColorsArr, int count){
+        int number;
+
+        if (count == 1){
+            number = 3;
+        }
+        else {
+            number = 1;
+        }
+
+        for (int i = 0; i < count; i++){
+            switch (selectedColorsArr[i]) {
+                case "P":
+                    player.stuff.getInfo().pinkCoin += number;  
+                    player.getPlayerCoin().getCoins()[0].updateCoin(player.stuff.getInfo().pinkCoin);
+                    break;
+
+                case "O":
+                    player.stuff.getInfo().orangeCoin += number;
+                    player.getPlayerCoin().getCoins()[1].updateCoin(player.stuff.getInfo().orangeCoin); 
+                    break;
+
+                case "R":
+                    player.stuff.getInfo().redCoin += number;     
+                    player.getPlayerCoin().getCoins()[2].updateCoin(player.stuff.getInfo().redCoin);
+                    break;
+
+                case "B":
+                    player.stuff.getInfo().blueCoin += number; 
+                    player.getPlayerCoin().getCoins()[3].updateCoin(player.stuff.getInfo().blueCoin); 
+                    break;
+
+                case "G":
+                    player.stuff.getInfo().greenCoin += number; 
+                    player.getPlayerCoin().getCoins()[4].updateCoin(player.stuff.getInfo().greenCoin); 
+                    break;
+            }
+        }
+
+        
+        System.out.println("P" + player.stuff.getInfo().pinkCoin);
+        System.out.println("O" + player.stuff.getInfo().orangeCoin);
+        System.out.println("R" + player.stuff.getInfo().redCoin);
+        System.out.println("B" + player.stuff.getInfo().blueCoin);
+        System.out.println("G" + player.stuff.getInfo().greenCoin); 
+    }
+
+    @Override
+    public void onSelectedCoins(){
+        int size = logo.getSlotMachinDialog().getSelectedColors().size();
+        String[] selectedColorsArr = new String[size];
+
+        for (int i = 0; i < size; i++){
+            selectedColorsArr[i] = logo.getSlotMachinDialog().getSelectedColors().get(i);
+        }
+
+
+        
+        if (Player.turn == 1){
+            addCoinsToPlayer(player1, selectedColorsArr, size);
+            
+        }
+        else {
+            addCoinsToPlayer(player2, selectedColorsArr, size);
+        }
+    }
+
 
     public TurnPanel getTurn() {
         return turn;
@@ -326,7 +397,7 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         add(turn);
 
         // logo pnale for slot machin
-        logo = new EntranceLogo();
+        logo = new EntranceLogo(this, turn);
         add(logo);
     }
 
