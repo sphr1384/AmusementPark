@@ -6,7 +6,7 @@ import constants.Game;
 
 public class Card {
     // non graphical attributes
-    private int score;
+    public int score;
     private int countOfCoins;
     private String cardCode = "P0-O0-R0-B0-G0/--";
     private Coin coins[];

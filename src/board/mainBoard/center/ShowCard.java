@@ -116,7 +116,9 @@ public class ShowCard extends JPanel implements MouseListener {
                         turnChangeListener.onWalletUpdate_coin(card);
                         turnChangeListener.onWalletUpdate_specialCoin(card);
                         turnChangeListener.onWalletUpdate_card(card);
+                        turnChangeListener.onScore(card);
                         turnChangeListener.onTurnChange();
+                        
                         decisionDialog.dispose();
                     }   
                     

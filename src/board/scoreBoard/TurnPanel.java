@@ -60,7 +60,6 @@ public class TurnPanel extends JPanel {
 
         revalidate();
         repaint();
-        
     }
 
     private void createColorfulLabel(){

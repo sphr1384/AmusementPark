@@ -202,6 +202,19 @@ public class ScoreBoard extends JPanel implements ClickCardListener{
         }
     }
 
+    @Override
+    public void onScore(CardUI card){
+        if (Player.turn == 1){
+            player1.score += card.getCard().score;
+            player1Panel.updateScore(player1.score);
+        }
+        else {
+            player2.score += card.getCard().score;
+            player2Panel.updateScore(player2.score);
+        }
+    }
+
+
     public TurnPanel getTurn() {
         return turn;
     }
