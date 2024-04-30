@@ -5,13 +5,14 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import Components.Coin;
+import Components.PrizeClaw;
 import Components.card.CardUI;
 import board.Board;
 import board.scoreBoard.slot_machin.EntranceLogo;
-import constants.CoinColor;
 import constants.Size;
 import player.Player;
 import Interface.ClickCardListener;
@@ -19,6 +20,7 @@ import Interface.SlotMachinChosenCoinListener;
 
 public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinChosenCoinListener{
     private ScoreBoardBackground scoreBoardBackground;
+    private Board board;
     
     private PlayersPanel player1Panel;
     private PlayersPanel player2Panel;
@@ -237,8 +239,44 @@ public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinC
         else {
             player2.score += card.getCard().score;
             player2Panel.updateScore(player2.score);
+
+            if (endGame() > 0){
+                JLabel winner;
+                if (endGame() == 1){
+                    winner = new JLabel(player1.stuff.getName() + " is winner");
+                }
+                else {
+                    winner = new JLabel(player2.stuff.getName() + " is winner");
+                }
+
+                JDialog endgame = new JDialog(board);
+                endgame.setTitle("The Winner:");
+                endgame.setSize(new Dimension(200, 200));
+                endgame.add(winner);
+                
+            }
         }
     }
+
+    private int endGame(){
+        if (player1.score >= 15 && player2.score >= 15){
+            if (player1.score > player2.score) return 1;
+            else if (player1.score < player2.score) return 2;
+            else return 0;
+        }
+        else if (player1.score >= 15 && player2.score < 15) {
+            return 1;
+        }
+
+        else if (player1.score < 15 && player2.score >= 15){
+            return 2;
+        }
+
+        else {
+            return 0;
+        }
+    }
+
 
     @Override
     public void onReservationUpdate(CardUI card){
@@ -292,13 +330,6 @@ public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinC
                     break;
             }
         }
-
-        
-        System.out.println("P" + player.stuff.getInfo().pinkCoin);
-        System.out.println("O" + player.stuff.getInfo().orangeCoin);
-        System.out.println("R" + player.stuff.getInfo().redCoin);
-        System.out.println("B" + player.stuff.getInfo().blueCoin);
-        System.out.println("G" + player.stuff.getInfo().greenCoin); 
     }
 
     @Override
@@ -309,9 +340,6 @@ public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinC
         for (int i = 0; i < size; i++){
             selectedColorsArr[i] = logo.getSlotMachinDialog().getSelectedColors().get(i);
         }
-
-
-        
         if (Player.turn == 1){
             addCoinsToPlayer(player1, selectedColorsArr, size);
             
@@ -320,6 +348,20 @@ public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinC
             addCoinsToPlayer(player2, selectedColorsArr, size);
         }
     }
+
+    @Override
+    public void onScore(PrizeClaw prizeClaw){
+        if (Player.turn == 1){
+            player1.score += prizeClaw.getScore();
+            player1Panel.updateScore(player1.score);
+        }
+        else {
+            player2.score += prizeClaw.getScore();
+            player2Panel.updateScore(player2.score);
+        }
+    }
+
+    
 
 
     public TurnPanel getTurn() {
@@ -337,6 +379,7 @@ public class ScoreBoard extends JPanel implements ClickCardListener, SlotMachinC
 
 
     public ScoreBoard(Board board, Player player1, Player player2){
+        this.board = board;
         this.player1 = player1;
         this.player2 = player2;
 
