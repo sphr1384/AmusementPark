@@ -22,6 +22,12 @@ public class ChooseCoin extends JDialog {
     private JButton exitButton;
     private ArrayList<String> selectedColors = new ArrayList<>(); // ArrayList to store selected colors
 
+    public static int pink = 4;
+    public static int orange = 4;
+    public static int red = 4;
+    public static int blue = 4;
+    public static int green = 4;
+
     private SlotMachinChosenCoinListener slotMachinChosenCoinListener;
     TurnPanel turnPanel;
 
@@ -82,31 +88,50 @@ public class ChooseCoin extends JDialog {
                 int selectedCount = 0;
                 StringBuilder selectedCheckboxes = new StringBuilder();
                 
-        
-                if (checkBox1.isSelected()) {
-                    selectedCount++;
-                    selectedCheckboxes.append("Checkbox 1 ");
-                    selectedColors.add("P"); 
+                if (checkBox1.isSelected() && pink > 0) {
+                    if (selectedCount == 0 && pink < 4) {
+                        // Do nothing
+                    } else {
+                        selectedCount++;
+                        selectedCheckboxes.append("Checkbox 1 ");
+                        selectedColors.add("P"); 
+                    }
                 }
-                if (checkBox2.isSelected()) {
-                    selectedCount++;
-                    selectedCheckboxes.append("Checkbox 2 ");
-                    selectedColors.add("O"); 
+                if (checkBox2.isSelected() && orange > 0) {
+                    if (selectedCount == 0 && orange < 4) {
+                        // Do nothing
+                    } else {
+                        selectedCount++;
+                        selectedCheckboxes.append("Checkbox 2 ");
+                        selectedColors.add("O"); 
+                    }
                 }
-                if (checkBox3.isSelected()) {
-                    selectedCount++;
-                    selectedCheckboxes.append("Checkbox 3 ");
-                    selectedColors.add("R"); 
+                if (checkBox3.isSelected() && red > 0) {
+                    if (selectedCount == 0 && red < 4) {
+                        // Do nothing
+                    } else {
+                        selectedCount++;
+                        selectedCheckboxes.append("Checkbox 3 ");
+                        selectedColors.add("R"); 
+                    }
                 }
-                if (checkBox4.isSelected()) {
-                    selectedCount++;
-                    selectedCheckboxes.append("Checkbox 4 ");
-                    selectedColors.add("B"); 
+                if (checkBox4.isSelected() && blue > 0) {
+                    if (selectedCount == 0 && blue < 4) {
+                        // Do nothing
+                    } else {
+                        selectedCount++;
+                        selectedCheckboxes.append("Checkbox 4 ");
+                        selectedColors.add("B"); 
+                    }
                 }
-                if (checkBox5.isSelected()) {
-                    selectedCount++;
-                    selectedCheckboxes.append("Checkbox 5 ");
-                    selectedColors.add("G"); 
+                if (checkBox5.isSelected() && green > 0) {
+                    if (selectedCount == 0 && green < 4) {
+                        // Do nothing
+                    } else {
+                        selectedCount++;
+                        selectedCheckboxes.append("Checkbox 5 ");
+                        selectedColors.add("G"); 
+                    }
                 }
         
                 if (selectedCount == 1 || selectedCount == 3) {
@@ -124,6 +149,7 @@ public class ChooseCoin extends JDialog {
                 }
             }
         });
+        
     }        
 
     private void creatExitButton(){
